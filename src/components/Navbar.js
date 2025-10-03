@@ -42,7 +42,7 @@ function Navbar() {
                   <a className="nav-link" href="/complaint">Complaint</a>
                 </li>
                 <li className="nav-item">
-                  <button className="nav-link btn btn-link" onClick={handleLogout}>Logout</button>
+                  <button style={{color:'white'}} className="nav-link btn btn-link" onClick={handleLogout}>Logout</button>
                 </li>
               </>
             ) : (

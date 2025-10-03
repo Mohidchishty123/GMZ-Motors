@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../App';
 
 function Complaint() {
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [form, setForm] = useState({
     name: user.name || '',
     email: user.email || '',
@@ -16,14 +16,17 @@ function Complaint() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const updatedUsers = users.map(u => 
-      u.email === user.email ? { ...u, complaints: [...(u.complaints || []), form] } : u
-    );
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
-    setUser({ ...user, complaints: [...(user.complaints || []), form] });
-    alert('Complaint submitted! Check your Profile for details.');
-    setForm({ ...form, complaint: '' });
+    fetch('http://localhost:5000/api/complaints', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Error');
+        alert('✅ Complaint submitted!');
+        setForm({ ...form, complaint: '' });
+      })
+      .catch(() => alert('❌ Something went wrong. Please try again later.'));
   }
 
   return (
@@ -37,37 +40,19 @@ function Complaint() {
         <div className="col-md-6 offset-md-3">
           <div className="form-container">
             <form onSubmit={handleSubmit}>
-              <div className="mb-3 form-group" style={{ '--form-index': 0 }}>
+              <div className="mb-3">
                 <label className="form-label">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  className="form-control"
-                  value={form.name}
-                  readOnly
-                />
+                <input type="text" name="name" className="form-control" value={form.name} readOnly />
               </div>
-              <div className="mb-3 form-group" style={{ '--form-index': 1 }}>
+              <div className="mb-3">
                 <label className="form-label">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  className="form-control"
-                  value={form.email}
-                  readOnly
-                />
+                <input type="email" name="email" className="form-control" value={form.email} readOnly />
               </div>
-              <div className="mb-3 form-group" style={{ '--form-index': 2 }}>
+              <div className="mb-3">
                 <label className="form-label">Phone Number</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  className="form-control"
-                  value={form.phone}
-                  readOnly
-                />
+                <input type="tel" name="phone" className="form-control" value={form.phone} readOnly />
               </div>
-              <div className="mb-3 form-group" style={{ '--form-index': 3 }}>
+              <div className="mb-3">
                 <label className="form-label">Complaint Details</label>
                 <textarea
                   name="complaint"
@@ -78,7 +63,7 @@ function Complaint() {
                   required
                 ></textarea>
               </div>
-              <button type="submit" className="btn btn-primary btn-submit w-100">Submit Complaint</button>
+              <button type="submit" className="btn btn-primary w-100">Submit Complaint</button>
             </form>
           </div>
         </div>

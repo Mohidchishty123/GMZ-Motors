@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import '../App.css';
 
 function Home() {
+  const [showPopup, setShowPopup] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowPopup(false), 2500);//It waits 2.5 seconds
+    return () => clearTimeout(timer);
+  }, []);
+
   const vehicles = [
     { name: "Toyota Land Cruiser V8", img: require('../images/landcruiser.jpg') },
     { name: "Toyota Prado", img: require('../images/prado.jpg') },
@@ -10,14 +19,11 @@ function Home() {
     { name: "Toyota Revo", img: require('../images/revo.jpg') }
   ];
 
-  const [showPopup, setShowPopup] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPopup(false);
-    }, 2500); // Popup visible for 2.5 seconds
-    return () => clearTimeout(timer); // Cleanup timer on unmount
-  }, []);
+  const tiledImages = [
+    require('../images/BMW.jpeg'),
+    require('../images/keychain.png'),
+    require('../images/WhiteBMW.png')
+  ];
 
   return (
     <>
@@ -33,9 +39,26 @@ function Home() {
         <div className="row mb-5">
           <div className="col text-center">
             <h1>Welcome to GMZ Motors</h1>
-            <h4>Premier Car Rental Services in Lahore</h4>
+            <h6>Premier Car Rental Services in Lahore</h6>
           </div>
         </div>
+        {/* New Tiled Images Section */}
+        <div
+          className="row mb-5 tiled-images-container"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {tiledImages.map((img, index) => (
+            <div key={index} className="col-md-4 col-sm-12 text-center">
+              <img
+                src={img}
+                alt={`Car ${index + 1}`}
+                className={`tiled-image ${isHovered ? 'paused' : ''}`}
+              />
+            </div>
+          ))}
+        </div>
+        {/* Existing Featured Vehicles Section */}
         <div className="row">
           <div className="col">
             <h2 className="mb-4">Featured Vehicles</h2>

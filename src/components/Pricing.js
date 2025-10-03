@@ -19,7 +19,7 @@ function Pricing() {
 
   return (
     <div className="container py-5">
-      <div className="row mb-4">
+      <div className="row mb-4"> 
         <div className="col text-center">
           <h1>Pricing</h1>
         </div>
